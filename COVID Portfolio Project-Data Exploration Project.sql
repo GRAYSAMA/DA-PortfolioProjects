@@ -131,16 +131,14 @@ From #PercentPopulationVaccinated
 --Creating View to store data for later visualizations
 
 Create View PercentPopulationVaccinated as
-select dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
-, SUM(cast(vac.new_vaccinations as float)) OVER (Partition by dea.Location Order by dea.Location,
-  dea.date) as RollingPeopleVaccinated
+Select dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
+, SUM(CONVERT(int,vac.new_vaccinations)) OVER (Partition by dea.Location Order by dea.location, dea.Date) as RollingPeopleVaccinated
+--, (RollingPeopleVaccinated/population)*100
 From PortfolioProject..CovidDeaths dea
 Join PortfolioProject..CovidVaccinations vac
-	on dea.location = vac.location
+	On dea.location = vac.location
 	and dea.date = vac.date
-
-where dea.continent is not null
---order by 2,3
+where dea.continent is not null 
 
 
 
